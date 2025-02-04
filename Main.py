@@ -21,6 +21,16 @@ class Human:
             print(f"{self.name} поїв. Ситість: {self.satiety}. Їжі вдома: {self.house.food}")
         else:
             print("Немає їжі вдома")
+            self.buy_food()
+
+    def buy_food(self):
+       if self.money >= 10:
+           self.house.food += random.randint(1, 5)
+           self.money -= random.randint(10, 20)
+           print(f"{self.name} купив їжу. Їжі вдома: {self.house.food}.")
+       else:
+           print(f"{self.name} не вистачає грошей на їжу!")
+
 
 class Auto:
     def __init__(self, brand, fuel, durability, fuel_consumption):
@@ -32,7 +42,7 @@ class Auto:
 class House:
     def __init__(self):
         self.mess = 0
-        self.food = 100
+        self.food = 5
 
 class Job:
     def __init__(self, position, salary, happiness_loss):
@@ -40,8 +50,9 @@ class Job:
         self.salary = salary
         self.happiness_loss = happiness_loss
 
-house = House()
+
 human = Human("Андрій")
+house = House()
 human.house = house
 
 print(f"\nДень 1:")
