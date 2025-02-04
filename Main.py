@@ -5,14 +5,14 @@ class Human:
         self.name = name
         self.money = 100
         self.happiness = 50
-        self.satiety = 10
+        self.satiety = 20
         self.job = None
         self.car = None
         self.house = None
 
-    def simulate_day(self):
-        if self.satiety < 20:
-            self.eat()
+    def get_job(self, job):
+        self.job = job
+        print(f"{self.name} отримав роботу: {job.position}")
 
     def eat(self):
         if self.house.food > 0:
@@ -30,6 +30,27 @@ class Human:
            print(f"{self.name} купив їжу. Їжі вдома: {self.house.food}.")
        else:
            print(f"{self.name} не вистачає грошей на їжу!")
+
+
+    def simulate_day(self):
+        if self.satiety < 20:
+            self.eat()
+        elif not self.job:
+            random_job = random.randint(1, 3)
+            if random_job == 1:
+                self.get_job(Job("Прибиральник", 20, 10))
+                print(f"")
+            elif random_job == 2:
+                self.get_job(Job("Офісний працівник", 30, 5))
+            elif random_job == 3:
+                self.get_job(Job("Начальник", 50, 2))
+
+    def work(self):
+        if self.job:
+            self.money += self.salary
+            self.happiness -= 10
+            self.satiety -= 8
+            print(f"{self.name} працював і заробив {self.job.salary}. Баланс: {self.money}.")
 
 
 class Auto:
@@ -55,5 +76,5 @@ human = Human("Андрій")
 house = House()
 human.house = house
 
-print(f"\nДень 1:")
+print(f"\nДень 1:\n")
 human.simulate_day()
