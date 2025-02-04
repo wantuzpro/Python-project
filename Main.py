@@ -5,10 +5,22 @@ class Human:
         self.name = name
         self.money = 100
         self.happiness = 50
-        self.satiety = 50
+        self.satiety = 10
         self.job = None
         self.car = None
         self.house = None
+
+    def simulate_day(self):
+        if self.satiety < 20:
+            self.eat()
+
+    def eat(self):
+        if self.house.food > 0:
+            self.satiety += random.randint(30, 70)
+            self.house.food -= random.randint(1, 4)
+            print(f"{self.name} поїв. Ситість: {self.satiety}. Їжі вдома: {self.house.food}")
+        else:
+            print("Немає їжі вдома")
 
 class Auto:
     def __init__(self, brand, fuel, durability, fuel_consumption):
@@ -20,7 +32,7 @@ class Auto:
 class House:
     def __init__(self):
         self.mess = 0
-        self.food = 5
+        self.food = 100
 
 class Job:
     def __init__(self, position, salary, happiness_loss):
@@ -28,3 +40,9 @@ class Job:
         self.salary = salary
         self.happiness_loss = happiness_loss
 
+house = House()
+human = Human("Андрій")
+human.house = house
+
+print(f"\nДень 1:")
+human.simulate_day()
