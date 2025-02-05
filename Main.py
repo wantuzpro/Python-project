@@ -6,6 +6,8 @@ class Human:
         self.money = 5
         self.happiness = 50
         self.satiety = 10
+        self.weekday = ["Старт","Понеділок","Вівторок","Середа","Четвер","П'ятниця","Субота","Неділя"]
+        self.current_day = self.weekday[1]
         self.job = None
         self.car = None
         self.house = None
@@ -47,9 +49,8 @@ class Human:
                 self.get_job(Job("Начальник", 50, 2))
                 return self
 
-        elif self.money < 10:
+        elif self.current_day not in ["Субота", "Неділя"]:
             self.work()
-
 
     def work(self):
          self.money += self.job.salary
@@ -81,11 +82,15 @@ human = Human("Андрій")
 house = House()
 human.house = house
 
+
 print(f"\nДень 1:\n")
+print(f"Сьогодні {human.current_day}")
 human.simulate_day()
 
 print(f"\nДень 2:\n")
+print(f"Сьогодні {human.current_day}")
 human.simulate_day()
 
 print(f"\nДень 3:\n")
+print(f"Сьогодні {human.current_day}")
 human.simulate_day()
