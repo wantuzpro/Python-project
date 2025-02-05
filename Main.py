@@ -3,9 +3,9 @@ import random
 class Human:
     def __init__(self, name):
         self.name = name
-        self.money = 100
+        self.money = 5
         self.happiness = 50
-        self.satiety = 20
+        self.satiety = 10
         self.job = None
         self.car = None
         self.house = None
@@ -39,18 +39,23 @@ class Human:
             random_job = random.randint(1, 3)
             if random_job == 1:
                 self.get_job(Job("Прибиральник", 20, 10))
-                print(f"")
+                return self
             elif random_job == 2:
                 self.get_job(Job("Офісний працівник", 30, 5))
+                return self
             elif random_job == 3:
                 self.get_job(Job("Начальник", 50, 2))
+                return self
+
+        elif self.money < 10:
+            self.work()
+
 
     def work(self):
-        if self.job:
-            self.money += self.salary
-            self.happiness -= 10
-            self.satiety -= 8
-            print(f"{self.name} працював і заробив {self.job.salary}. Баланс: {self.money}.")
+         self.money += self.job.salary
+         self.happiness -= 10
+         self.satiety -= 8
+         print(f"{self.name} працював і заробив {self.job.salary}. Баланс: {self.money}.")
 
 
 class Auto:
@@ -77,4 +82,10 @@ house = House()
 human.house = house
 
 print(f"\nДень 1:\n")
+human.simulate_day()
+
+print(f"\nДень 2:\n")
+human.simulate_day()
+
+print(f"\nДень 3:\n")
 human.simulate_day()
