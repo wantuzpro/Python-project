@@ -7,7 +7,8 @@ class Human:
         self.happiness = 50
         self.satiety = 10
         self.weekday = ["Старт","Понеділок","Вівторок","Середа","Четвер","П'ятниця","Субота","Неділя"]
-        self.current_day = self.weekday[1]
+        self.current_day_index = 1
+        self.current_day = self.weekday[self.current_day_index]
         self.job = None
         self.car = None
         self.house = None
@@ -41,13 +42,10 @@ class Human:
             random_job = random.randint(1, 3)
             if random_job == 1:
                 self.get_job(Job("Прибиральник", 20, 10))
-                return self
             elif random_job == 2:
                 self.get_job(Job("Офісний працівник", 30, 5))
-                return self
             elif random_job == 3:
                 self.get_job(Job("Начальник", 50, 2))
-                return self
 
         elif self.current_day not in ["Субота", "Неділя"]:
             self.work()
@@ -82,15 +80,18 @@ human = Human("Андрій")
 house = House()
 human.house = house
 
+for day in range(1, 10):
+    print(f"\nДень {day}")
+    print(f"Сьогодні {human.current_day}")
+    if human.current_day_index == 7:
+        human.current_day_index = 1
+        human.current_day = human.weekday[human.current_day_index]
+        human.simulate_day()
+    else:
+        human.current_day_index += 1
+        human.current_day = human.weekday[human.current_day_index]
+        human.simulate_day()
 
-print(f"\nДень 1:\n")
-print(f"Сьогодні {human.current_day}")
-human.simulate_day()
 
-print(f"\nДень 2:\n")
-print(f"Сьогодні {human.current_day}")
-human.simulate_day()
 
-print(f"\nДень 3:\n")
-print(f"Сьогодні {human.current_day}")
-human.simulate_day()
+
