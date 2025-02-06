@@ -9,9 +9,9 @@ class Human:
         self.weekday = ["Старт","Понеділок","Вівторок","Середа","Четвер","П'ятниця","Субота","Неділя"]
         self.current_day_index = 1
         self.current_day = self.weekday[self.current_day_index]
-        self.job = None
-        self.car = None
-        self.house = None
+        self.job = "Нема"
+        self.car = "Нема"
+        self.house = "Нема"
 
     def get_job(self, job):
         self.job = job
@@ -34,12 +34,19 @@ class Human:
        else:
            print(f"{self.name} не вистачає грошей на їжу!")
 
+    def work(self):
+        self.money += self.job.salary
+        self.happiness -= 10
+        self.satiety -= 8
+        print(f"{self.name} працював і заробив {self.job.salary}. Баланс: {self.money}.")
 
     def simulate_day(self):
         self.house.mess += random.randint(5, 10)
+
         if self.satiety < 20:
             self.eat()
-        elif not self.job:
+
+        elif self.job == "Нема":
             random_job = random.randint(1, 3)
             if random_job == 1:
                 self.get_job(Job("Прибиральник", 20, 10))
@@ -50,12 +57,6 @@ class Human:
 
         elif self.current_day not in ["Субота", "Неділя"]:
             self.work()
-
-    def work(self):
-         self.money += self.job.salary
-         self.happiness -= 10
-         self.satiety -= 8
-         print(f"{self.name} працював і заробив {self.job.salary}. Баланс: {self.money}.")
 
 
 class Auto:
