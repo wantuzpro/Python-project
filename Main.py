@@ -36,6 +36,7 @@ class Human:
 
 
     def simulate_day(self):
+        self.house.mess += random.randint(5, 10)
         if self.satiety < 20:
             self.eat()
         elif not self.job:
@@ -91,7 +92,3 @@ for day in range(1, 10):
         human.current_day_index += 1
         human.current_day = human.weekday[human.current_day_index]
         human.simulate_day()
-
-
-
-
