@@ -6,7 +6,7 @@ class Human:
         self.money = 5
         self.happiness = 50
         self.satiety = 10
-        self.weekday = ["Старт","Понеділок","Вівторок","Середа","Четвер","П'ятниця","Субота","Неділя"]
+        self.weekday = ["Старт", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота", "Неділя"]
         self.current_day_index = 1
         self.current_day = self.weekday[self.current_day_index]
         self.job = "Нема"
@@ -45,11 +45,11 @@ class Human:
             max_eat_food = random.randint(1, 4)
             if max_eat_food > house.food:
                 house.food -= house.food
-                print(f"{self.name}поїв. Ситість: {self.satiety}. Їжі вдома: {self.house.food}")
+                print(f"{self.name}поїв. Ситість: {self.satiety} Їжі вдома: {self.house.food}")
                 human.simulate_day()
             else:
                 house.food -= max_eat_food
-                print(f"{self.name}поїв. Ситість: {self.satiety}. Їжі вдома: {self.house.food}")
+                print(f"{self.name}поїв. Ситість: {self.satiety} Їжі вдома: {self.house.food}")
                 human.simulate_day()
                 if house.food <= 1:
                     self.buy_food()
@@ -61,11 +61,16 @@ class Human:
         self.money += self.job.salary
         self.happiness -= 10
         self.satiety -= 10
-        print(f"{self.name}працював і заробив {self.job.salary}. Баланс: {self.money}.")
+        print(f"{self.name}працював і заробив {self.job.salary}. Баланс: {self.money}, Ситість: {self.satiety}, Щастя: {self.happiness}")
 
     def have_fun(self):
         self.happiness += 10
         print(f"{self.name} Відпочиває")
+
+    def clean_house(self):
+        if self.house:
+            self.house.mess = 0
+            print(f"{self.name} прибрав у домі.")
 
     def simulate_day(self):
         self.house.mess += random.randint(5, 10)
@@ -76,7 +81,10 @@ class Human:
         elif self.current_day not in ["Субота", "Неділя"]:
             self.work()
         elif self.current_day in ["Субота", "Неділя"]:
-            self.have_fun()
+            if house.mess > 60:
+                self.clean_house()
+            else:
+                self.have_fun()
 
 class Auto:
     def __init__(self, brand, fuel, durability, fuel_consumption):
