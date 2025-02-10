@@ -74,8 +74,19 @@ class Human:
         if vacation_type == 1:
             print(f"{self.name}захотів пограти в доту")
             if random.randint(1, 2) == 2:
-                self.happiness += 10
-                print(f"{self.name}він програв... Щастя: {self.happiness}")
+                reason_losing = random.randint(1, 4)
+                if reason_losing == 1:
+                    self.happiness -= 10
+                    print(f"Анти-маг зібрав бф на 40 хвилині.{self.name} програв... Щастя: {self.happiness}")
+                elif reason_losing == 2:
+                    self.happiness -= 5
+                    print(f"Заруїнили агенти габена. {self.name}програв... Щастя: {self.happiness}")
+                elif reason_losing == 3:
+                    self.happiness -= 10
+                    print(f"Керрі не натиснув бкб у файте. {self.name}програв... Щастя: {self.happiness}")
+                else:
+                    self.happiness += 10
+                    print(f"{self.name}програв... Щастя: {self.happiness}")
             else:
                 self.happiness += 20
                 print(f"{self.name}він переміг! Щастя: {self.happiness}")
@@ -109,13 +120,6 @@ class Human:
                 else:
                     self.have_fun()
 
-class Auto:
-    def __init__(self, brand, fuel, durability, fuel_consumption):
-        self.brand = brand
-        self.fuel = fuel
-        self.durability = durability
-        self.fuel_consumption = fuel_consumption
-
 class House:
     def __init__(self):
         self.mess = 0
@@ -126,6 +130,13 @@ class Job:
         self.position = position
         self.salary = salary
         self.happiness_loss = happiness_loss
+
+class Auto:
+    def __init__(self, brand, fuel, durability, fuel_consumption):
+        self.brand = brand
+        self.fuel = fuel
+        self.durability = durability
+        self.fuel_consumption = fuel_consumption
 
 human = Human("Віктор Коренеплід ")
 house = House()
