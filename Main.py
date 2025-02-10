@@ -64,13 +64,24 @@ class Human:
         print(f"{self.name}працював і заробив {self.job.salary}. Баланс: {self.money}, Ситість: {self.satiety}, Щастя: {self.happiness}")
 
     def have_fun(self):
-        self.happiness += 10
-        print(f"{self.name} Відпочиває")
+        vacation_type = random.randint(1, 2)
+        if vacation_type == 1:
+            print(f"{self.name} захотів пограти в доту")
+            if random.randint(1, 2) == 2:
+                self.happiness += 10
+                print(f"{self.name} він програв... Щастя: {self.happiness}")
+            else:
+                self.happiness += 20
+                print(f"{self.name} він переміг! Щастя: {self.happiness}")
+        else:
+            self.happiness += 20
+            print(f"{self.name} Відпочиває. Щастя: {self.happiness}")
 
     def clean_house(self):
         if self.house:
             self.house.mess = 0
-            print(f"{self.name} прибрав у домі.")
+            self.happiness += 10
+            print(f"{self.name} прибрав у домі. Щастя: {self.happiness}")
 
     def simulate_day(self):
         self.house.mess += random.randint(5, 10)
@@ -110,8 +121,8 @@ house = House()
 human.house = house
 
 for day in range(1, 11):
-    print(f"\nДень {day}")
-    print(f"Сьогодні {human.current_day}")
+    print(f"\nДень: {day}")
+    print(f"Сьогодні: {human.current_day}")
 
     print("\nСтатистика:\n")
     print(f"Ім'я: {human.name}")
