@@ -8,8 +8,8 @@ class Human:
         self.satiety = 10
         self.alive = True
         self.work_today = False
-        self.weekday = ["Старт", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота", "Неділя"]
-        self.current_day_index = 1
+        self.weekday = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота", "Неділя"]
+        self.current_day_index = 0
         self.current_day = self.weekday[self.current_day_index]
         self.job = "Нема"
         self.car = "Нема"
@@ -32,15 +32,18 @@ class Human:
             print(f"{self.name}не знайшов роботу")
 
     def buy_food(self):
-       if self.money >= 10:
-           house.food += random.randint(1, 5)
-           self.money -= random.randint(10, 20)
-           print(f"{self.name}купив їжу. Їжі вдома: {house.food}.")
-           human.simulate_day()
-       else:
-           print(f"{self.name}не вистачає грошей на їжу!")
-           self.happiness += 20
-           human.simulate_day()
+        products = random.randint(1, 5)
+        price = random.randint(2, 5)
+        price *= products
+
+        if self.money >= price:
+            house.food += products
+            self.money -= price
+            print(f"{self.name}купив їжу. Їжі вдома: {house.food}.")
+            human.simulate_day()
+        else:
+            print(f"{self.name}не вистачає грошей на їжу!")
+            self.happiness -= random.randint(5, 10)
 
     def eat(self):
         if house.food > 0:
@@ -77,7 +80,7 @@ class Human:
                 reason_losing = random.randint(1, 4)
                 if reason_losing == 1:
                     self.happiness -= 10
-                    print(f"Анти-маг зібрав бф на 40 хвилині.{self.name} програв... Щастя: {self.happiness}")
+                    print(f"Анти-маг зібрав бф на 40 хвилині. {self.name}програв... Щастя: {self.happiness}")
                 elif reason_losing == 2:
                     self.happiness -= 5
                     print(f"Заруїнили агенти габена. {self.name}програв... Щастя: {self.happiness}")
@@ -155,10 +158,10 @@ for day in range(1, 11):
         print(f"Ситість: {human.satiety}")
         print(f"Забруднення у квартирі: {house.mess}")
         print(f"Їжі у квартирі: {house.food}")
-        print("\nРозпорядок для:\n")
+        print("\nПодії дня:\n")
 
-        if human.current_day_index == 7:
-            human.current_day_index = 1
+        if human.current_day_index == 6:
+            human.current_day_index = 0
             human.current_day = human.weekday[human.current_day_index]
             human.simulate_day()
         else:
