@@ -1,4 +1,5 @@
 import random
+import os
 
 class Human:
     def __init__(self, name):
@@ -25,7 +26,7 @@ class Human:
             elif random_job == 2:
                 job = Job("Офісний працівник", 30, 5)
             elif random_job == 3:
-                job = Job("Начальник", 50, 2)
+                job = Job("Шеф", 50, 2)
             self.job = job
             print(f"{self.name}отримав роботу: {job.position}")
         else:
@@ -145,7 +146,7 @@ human = Human("Віктор Коренеплід ")
 house = House()
 human.house = house
 
-for day in range(1, 11):
+for day in range(1, 21):
     if human.alive:
         human.work_today = False
         print(f"\nДень: {day}")
@@ -171,3 +172,5 @@ for day in range(1, 11):
     else:
         print(f"{human.name}загинув...")
         break
+
+print("☆:.｡.o(≧▽≦)o.｡.:☆")
