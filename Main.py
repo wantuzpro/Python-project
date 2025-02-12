@@ -4,7 +4,7 @@ import os
 class Human:
     def __init__(self, name):
         self.name = name
-        self.money = 5
+        self.money = 100
         self.happiness = 50
         self.satiety = 10
         self.alive = True
@@ -104,25 +104,74 @@ class Human:
             self.happiness += 10
             print(f"{self.name} прибрав у домі. Щастя: {self.happiness}")
 
-    def get_car(self):
-        pass
+    def buy_car(self):
+        print("1. Nissan, ціна: 100, витрата палива: 60")
+        print("2. BMW, ціна: 120, витрата палива: 40")
+        print("3. Toyota, ціна: 240, витрата палива: 10")
+        match input("Яку купити?: "):
+            case "1":
+                if self.money > 99:
+                    self.car = Auto("Nissan", 0, 100, 60)
+                    print(f"Купив {self.car.brand}")
+                else:
+                    print("Немає грошей на машину")
+            case "2":
+                if self.money > 119:
+                    self.car = Auto("BMW", 0, 120, 40)
+                    print(f"Купив {self.car.brand}")
+                else:
+                    print("Немає грошей на машину")
+            case "3":
+                if self.money > 239:
+                    self.car = Auto("Toyota", 0, 240, 10)
+                    print(f"Купив {self.car.brand}")
+                else:
+                    print("Немає грошей на машину")
+            case _:
+                print("Неправильний ввід")
 
-    def simulate_day(self):
+    def check_status(self):
+        self.house.mess += random.randint(5, 10)
+        print("Події дня:")
         if self.happiness < 1:
             self.alive = False
         else:
-            self.house.mess += random.randint(5, 10)
-            if self.satiety < 20:
-                self.eat()
+            if self.satiety < 10:
+                print(f"{self.name}зголоднів")
             elif self.job == "Нема":
-                self.get_job()
+                print(f"{self.name}безробітний")
             elif self.current_day not in ["Субота", "Неділя"] and not self.work_today:
-                self.work()
+                print(f"{self.name}потрібно сходити на роботу")
             elif self.current_day in ["Субота", "Неділя"]:
-                if house.mess > 60:
-                    self.clean_house()
+                print("сьогодні вихідні можна відпочити")
+            elif house.mess > 60:
+                print("У будинку брудно. Може варто прибрати?")
+
+    def simulate_day(self):
+        match input("Що робити?: "):
+            case "1":
+                if human.job == "Нема":
+                    self.get_job()
                 else:
-                    self.have_fun()
+                    if self.current_day not in ["Субота", "Неділя"] and not self.work_today:
+                        self.work()
+                    else:
+                        print("Ви не можете працювати сьогодні")
+            case "2":
+                print(f"Купити: 1. Їжу, 2. Машину. Гроші: {human.money}")
+                match input("Що купити?: "):
+                    case "1":
+                        self.buy_food()
+                    case "2":
+                        self.buy_car()
+            case "3":
+                self.eat()
+            case "4":
+                self.clean_house()
+            case "5":
+                self.have_fun()
+            case _:
+                print("Неправильний ввід")
 
 class House:
     def __init__(self):
@@ -146,20 +195,36 @@ human = Human("Віктор Коренеплід ")
 house = House()
 human.house = house
 
+print("\nСтатистика:\n")
+print(f"Ім'я: {human.name}")
+print(f"Гроші: {human.money}")
+print(f"Щастя: {human.happiness}")
+print(f"Ситість: {human.satiety}")
+print(f"Забруднення у квартирі: {house.mess}")
+print(f"Їжі у квартирі: {house.food}")
+
 for day in range(1, 21):
     if human.alive:
         human.work_today = False
         print(f"\nДень: {day}")
         print(f"Сьогодні: {human.current_day}")
 
-        print("\nСтатистика:\n")
-        print(f"Ім'я: {human.name}")
-        print(f"Гроші: {human.money}")
-        print(f"Щастя: {human.happiness}")
-        print(f"Ситість: {human.satiety}")
-        print(f"Забруднення у квартирі: {house.mess}")
-        print(f"Їжі у квартирі: {house.food}")
-        print("\nПодії дня:\n")
+        print(f"\nГроші: {human.money}, Щастя {human.happiness}, Ситість: {human.satiety}, Забруднення у квартирі: {house.mess}\n")
+
+        if human.job == "Нема":
+            print("1. Шукати роботу")
+            print("2. Купити")
+            print("3. Їсти")
+            print("4. Прибрати в будинку")
+            print("5. Відпочивати\n")
+        else:
+            print("1. Працювати")
+            print("2. Купити")
+            print("3. Їсти")
+            print("4. Прибрати в будинку")
+            print("5. Відпочивати\n")
+
+        human.check_status()
 
         if human.current_day_index == 6:
             human.current_day_index = 0
@@ -172,5 +237,3 @@ for day in range(1, 21):
     else:
         print(f"{human.name}загинув...")
         break
-
-print("☆:.｡.o(≧▽≦)o.｡.:☆")
