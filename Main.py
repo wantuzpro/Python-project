@@ -7,6 +7,7 @@ class Human:
         self.money = 100
         self.happiness = 50
         self.satiety = 10
+        self.stamina = 100
         self.alive = True
         self.work_today = False
         self.weekday = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота", "Неділя"]
@@ -17,34 +18,46 @@ class Human:
         self.house = "Нема"
 
     def get_job(self, job="Нема"):
-        self.satiety -= 10
-        random_job = random.randint(1, 5)
-        if random_job == 1:
-            random_job = random.randint(1, 3)
+        if self.stamina >= 60:
+            self.satiety -= 10
+            self.work_today = True
+            random_job = random.randint(1, 5)
             if random_job == 1:
-                job = Job("Прибиральник", 20, 10)
-            elif random_job == 2:
-                job = Job("Офісний працівник", 30, 5)
-            elif random_job == 3:
-                job = Job("Шеф", 50, 2)
-            self.job = job
-            print(f"{self.name}отримав роботу: {job.position}")
-        else:
-            print(f"{self.name}не знайшов роботу")
-
-    def buy_food(self):
-        products = random.randint(1, 5)
-        price = random.randint(2, 5)
-        price *= products
-
-        if self.money >= price:
-            house.food += products
-            self.money -= price
-            print(f"{self.name}купив їжу. Їжі вдома: {house.food}.")
+                random_job = random.randint(1, 3)
+                if random_job == 1:
+                    job = Job("Прибиральник", 20, 10)
+                elif random_job == 2:
+                    job = Job("Офісний працівник", 30, 5)
+                elif random_job == 3:
+                    job = Job("Шеф", 50, 2)
+                self.job = job
+                print(f"{self.name}отримав роботу: {job.position}")
+            else:
+                print(f"{self.name}не знайшов роботу. Щастя {human.happiness}, Ситість: {human.satiety}")
+            self.stamina -= 60
             human.simulate_day()
         else:
-            print(f"{self.name}не вистачає грошей на їжу!")
-            self.happiness -= random.randint(5, 10)
+            print(f"{self.name}сильно втомився щоб шукати роботу. Стаміна: {self.stamina}")
+            human.simulate_day()
+
+    def buy_food(self):
+        if self.stamina >= 10:
+            products = random.randint(1, 5)
+            price = random.randint(2, 5)
+            price *= products
+
+            if self.money >= price:
+                house.food += products
+                self.money -= price
+                print(f"{self.name}купив їжу. Їжі вдома: {house.food}.")
+                self.stamina -= 10
+                human.simulate_day()
+            else:
+                print(f"{self.name}не вистачає грошей на їжу!")
+                self.happiness -= random.randint(5, 10)
+        else:
+            print(f"{self.name}сильно втомився щоб купити їжі. Стаміна: {self.stamina}")
+            human.simulate_day()
 
     def eat(self):
         if house.food > 0:
@@ -74,35 +87,46 @@ class Human:
         print(f"{self.name}працював і заробив {self.job.salary}. Баланс: {self.money}, Ситість: {self.satiety}, Щастя: {self.happiness}")
 
     def have_fun(self):
-        vacation_type = random.randint(1, 2)
-        if vacation_type == 1:
-            print(f"{self.name}захотів пограти в доту")
-            if random.randint(1, 2) == 2:
-                reason_losing = random.randint(1, 4)
-                if reason_losing == 1:
-                    self.happiness -= 10
-                    print(f"Анти-маг зібрав бф на 40 хвилині. {self.name}програв... Щастя: {self.happiness}")
-                elif reason_losing == 2:
-                    self.happiness -= 5
-                    print(f"Заруїнили агенти габена. {self.name}програв... Щастя: {self.happiness}")
-                elif reason_losing == 3:
-                    self.happiness -= 10
-                    print(f"Керрі не натиснув бкб у файте. {self.name}програв... Щастя: {self.happiness}")
+        if self.stamina >= 20:
+            vacation_type = random.randint(1, 2)
+            if vacation_type == 1:
+                print(f"{self.name}захотів пограти в доту")
+                if random.randint(1, 2) == 2:
+                    reason_losing = random.randint(1, 4)
+                    if reason_losing == 1:
+                        self.happiness -= 10
+                        print(f"Анти-маг зібрав бф на 40 хвилині. {self.name}програв... Щастя: {self.happiness}")
+                    elif reason_losing == 2:
+                        self.happiness -= 5
+                        print(f"Заруїнили агенти габена. {self.name}програв... Щастя: {self.happiness}")
+                    elif reason_losing == 3:
+                        self.happiness -= 10
+                        print(f"Керрі не натиснув бкб у файте. {self.name}програв... Щастя: {self.happiness}")
+                    else:
+                        self.happiness += 10
+                        print(f"{self.name}програв... Щастя: {self.happiness}")
                 else:
-                    self.happiness += 10
-                    print(f"{self.name}програв... Щастя: {self.happiness}")
+                    self.happiness += 20
+                    print(f"{self.name}він переміг! Щастя: {self.happiness}")
+                self.stamina -= 20
             else:
                 self.happiness += 20
-                print(f"{self.name}він переміг! Щастя: {self.happiness}")
+                print(f"{self.name}відпочиває. Щастя: {self.happiness}")
         else:
-            self.happiness += 20
-            print(f"{self.name}відпочиває. Щастя: {self.happiness}")
+            print(f"{self.name}сильно втомився для ігор. Стаміна: {self.stamina}")
+        human.simulate_day()
 
     def clean_house(self):
-        if self.house:
-            self.house.mess = 0
-            self.happiness += 10
-            print(f"{self.name} прибрав у домі. Щастя: {self.happiness}")
+        if self.stamina >= 80:
+            if self.house:
+                self.house.mess = 0
+                self.happiness += 10
+                self.stamina -= 80
+                print(f"{self.name} прибрав у домі. Щастя: {self.happiness}, Стаміна: {self.stamina}")
+                human.simulate_day()
+        else:
+            print(f"{self.name}сильно втомився для прибирання. Стаміна: {self.stamina}")
+            human.simulate_day()
 
     def buy_car(self):
         print("1. Nissan, ціна: 100, витрата палива: 60")
@@ -129,6 +153,7 @@ class Human:
                     print("Немає грошей на машину")
             case _:
                 print("Неправильний ввід")
+        human.simulate_day()
 
     def check_status(self):
         self.house.mess += random.randint(5, 10)
@@ -145,33 +170,49 @@ class Human:
             elif self.current_day in ["Субота", "Неділя"]:
                 print("сьогодні вихідні можна відпочити")
             elif house.mess > 60:
+                self.happiness -= random.randint(5,10)
                 print("У будинку брудно. Може варто прибрати?")
 
     def simulate_day(self):
-        match input("Що робити?: "):
-            case "1":
-                if human.job == "Нема":
-                    self.get_job()
-                else:
-                    if self.current_day not in ["Субота", "Неділя"] and not self.work_today:
-                        self.work()
+        if self.stamina > 0:
+            print(f"\nСтаміна: {self.stamina}")
+            match input("Що робити?: "):
+                case "1":
+                    if human.job == "Нема" and not self.work_today:
+                        self.get_job()
                     else:
-                        print("Ви не можете працювати сьогодні")
-            case "2":
-                print(f"Купити: 1. Їжу, 2. Машину. Гроші: {human.money}")
-                match input("Що купити?: "):
-                    case "1":
-                        self.buy_food()
-                    case "2":
-                        self.buy_car()
-            case "3":
-                self.eat()
-            case "4":
-                self.clean_house()
-            case "5":
-                self.have_fun()
-            case _:
-                print("Неправильний ввід")
+                        if self.current_day not in ["Субота", "Неділя"] and not self.work_today:
+                            self.work()
+                        else:
+                            print("Ви не можете працювати сьогодні")
+                            human.simulate_day()
+                case "2":
+                    print(f"Купити: 1.Їжу, 2.Машину, 3.Назад. Гроші: {human.money}")
+                    match input("Що купити?: "):
+                        case "1":
+                            self.buy_food()
+                        case "2":
+                            self.buy_car()
+                        case "3":
+                            human.simulate_day()
+                        case _:
+                            print("Неправильний ввід")
+                            human.simulate_day()
+                case "3":
+                    self.eat()
+                case "4":
+                    self.clean_house()
+                case "5":
+                    self.have_fun()
+                case "6":
+                    self.satiety -= 5
+                    self.happiness += 5
+                    print(f"{self.name}Заснув")
+                case _:
+                    print("Неправильний ввід")
+                    human.simulate_day()
+        else:
+            print(f"{self.name}Устал")
 
 class House:
     def __init__(self):
@@ -206,6 +247,7 @@ print(f"Їжі у квартирі: {house.food}")
 for day in range(1, 21):
     if human.alive:
         human.work_today = False
+        human.stamina = 100
         print(f"\nДень: {day}")
         print(f"Сьогодні: {human.current_day}")
 
@@ -216,13 +258,15 @@ for day in range(1, 21):
             print("2. Купити")
             print("3. Їсти")
             print("4. Прибрати в будинку")
-            print("5. Відпочивати\n")
+            print("5. Відпочивати")
+            print("6. Спать\n")
         else:
             print("1. Працювати")
             print("2. Купити")
             print("3. Їсти")
             print("4. Прибрати в будинку")
-            print("5. Відпочивати\n")
+            print("5. Відпочивати")
+            print("6. Спать\n")
 
         human.check_status()
 
