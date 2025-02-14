@@ -232,7 +232,8 @@ class Auto:
         self.durability = durability
         self.fuel_consumption = fuel_consumption
 
-human = Human("Віктор Коренеплід ")
+inp_name = input("Ведіть ім'я персонажа: ")
+human = Human(inp_name + " ")
 house = House()
 human.house = house
 
