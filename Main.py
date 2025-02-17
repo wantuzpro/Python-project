@@ -1,5 +1,4 @@
 import random
-import os
 
 class Human:
     def __init__(self, name):
@@ -15,7 +14,7 @@ class Human:
         self.current_day = self.weekday[self.current_day_index]
         self.job = "Нема"
         self.car = "Нема"
-        self.house = "Нема"
+        self.house = "Є"
 
     def get_job(self, job="Нема"):
         if self.stamina >= 60:
@@ -37,7 +36,7 @@ class Human:
             self.stamina -= 60
             human.simulate_day()
         else:
-            print(f"{self.name}сильно втомився щоб шукати роботу. Стаміна: {self.stamina}")
+            print(f"{self.name}дуже втомився щоб шукати роботу. Стаміна: {self.stamina}")
             human.simulate_day()
 
     def buy_food(self):
@@ -81,39 +80,71 @@ class Human:
             self.buy_food()
 
     def work(self):
-        self.money += self.job.salary
-        self.happiness -= 10
-        self.satiety -= 10
-        self.work_today = True
-        print(f"{self.name}працював і заробив {self.job.salary}. Баланс: {self.money}, Ситість: {self.satiety}, Щастя: {self.happiness}")
+        if self.stamina >= 60:
+            self.money += self.job.salary
+            self.happiness -= 10
+            self.satiety -= 10
+            self.work_today = True
+            print(f"{self.name}працював і заробив {self.job.salary}. Баланс: {self.money}, Ситість: {self.satiety}, Щастя: {self.happiness}")
+        else:
+            print(f"{self.name}дуже втомився щоб працювати. Стаміна: {self.stamina}")
+        human.simulate_day()
 
     def have_fun(self):
         if self.stamina >= 20:
-            vacation_type = random.randint(1, 2)
-            if vacation_type == 1:
-                print(f"{self.name}захотів пограти в доту")
-                if random.randint(1, 2) == 2:
-                    reason_losing = random.randint(1, 4)
-                    if reason_losing == 1:
-                        self.happiness -= 10
-                        print(f"Анти-маг зібрав бф на 40 хвилині. {self.name}програв... Щастя: {self.happiness}")
-                    elif reason_losing == 2:
-                        self.happiness -= 5
-                        print(f"Заруїнили агенти габена. {self.name}програв... Щастя: {self.happiness}")
-                    elif reason_losing == 3:
-                        self.happiness -= 10
-                        print(f"Керрі не натиснув бкб у файте. {self.name}програв... Щастя: {self.happiness}")
+            print(f"1.Пограти в доту, 2.Полежати на дивані, 3.Відправиться в подорож на машині, 4.Назад. Щастя: {self.happiness}")
+            match input("Як відпочити: "):
+                case "1":
+                    print(f"{self.name}захотів пограти в доту")
+                    if random.randint(1, 2) == 2:
+                        reason_losing = random.randint(1, 4)
+                        if reason_losing == 1:
+                            self.happiness -= 10
+                            print(f"Анти-маг зібрав бф на 40 хвилині. {self.name}програв... Щастя: {self.happiness}")
+                        elif reason_losing == 2:
+                            self.happiness -= 5
+                            print(f"Заруїнили агенти габена. {self.name}програв... Щастя: {self.happiness}")
+                        elif reason_losing == 3:
+                            self.happiness -= 10
+                            print(f"Керрі не натиснув бкб у файте. {self.name}програв... Щастя: {self.happiness}")
+                        else:
+                            self.happiness += 10
+                            print(f"{self.name}програв... Щастя: {self.happiness}")
                     else:
-                        self.happiness += 10
-                        print(f"{self.name}програв... Щастя: {self.happiness}")
-                else:
-                    self.happiness += 20
-                    print(f"{self.name}він переміг! Щастя: {self.happiness}")
-            else:
-                self.happiness += 20
-                print(f"{self.name}відпочиває. Щастя: {self.happiness}")
+                        self.happiness += 20
+                        print(f"{self.name}він переміг! Щастя: {self.happiness}")
+                case "2":
+                    print(f"{self.name}захотів полежати на дивані")
+                    self.happiness += 10
+                    print(f"{self.name}відпочиває. Щастя: {self.happiness}")
+                case "3":
+                    if self.car != "Нема" and self.car.fuel >= self.car.fuel_consumption:
+                        print("1.На рибалку, 2.В місто")
+                        match input("Куди вирушити?: "):
+                            case "1":
+                                print(f"{self.name}вирушив на рибалку")
+                                self.car.fuel -= self.car.fuel_consumption
+                                self.car.durability -= random.randint(5, 10)
+                                if random.randint == 1:
+                                    caught_fish = random.randint(1, 10)
+                                    house.food += caught_fish
+                                    self.happiness += 20
+                                    print(f"{self.name} зловив {caught_fish} риб. Щастя: {self.happiness}, Паливо: {self.car.fuel}, Міцність машини: {self.car.fuel}")
+                                else:
+                                    self.happiness += 10
+                                    print(f"{self.name}не зловив рибу. Щастя: {self.happiness}, Паливо: {self.car.fuel}, Міцність машини: {self.car.fuel}")
+                            case "2":
+                                pass
+                        self.stamina = 0
+                    else:
+                        print("Анлак")
+                case "4":
+                    human.simulate_day()
+                case _:
+                    print("Некоректне значення")
+                    self.have_fun()
         else:
-            print(f"{self.name}сильно втомився для ігор. Стаміна: {self.stamina}")
+            print(f"{self.name}дуже втомився для ігор. Стаміна: {self.stamina}")
         self.stamina -= 20
         human.simulate_day()
 
@@ -126,7 +157,7 @@ class Human:
                 print(f"{self.name} прибрав у домі. Щастя: {self.happiness}, Стаміна: {self.stamina}")
                 human.simulate_day()
         else:
-            print(f"{self.name}сильно втомився для прибирання. Стаміна: {self.stamina}")
+            print(f"{self.name}дуже втомився для прибирання. Стаміна: {self.stamina}")
             human.simulate_day()
 
     def buy_car(self):
@@ -136,24 +167,24 @@ class Human:
         match input("Яку купити?: "):
             case "1":
                 if self.money > 99:
-                    self.car = Auto("Nissan", 0, 100, 60)
+                    self.car = Auto("Nissan", 100, 100, 40)
                     print(f"Купив {self.car.brand}")
                 else:
                     print("Немає грошей на машину")
             case "2":
                 if self.money > 119:
-                    self.car = Auto("BMW", 0, 120, 40)
+                    self.car = Auto("BMW", 100, 120, 30)
                     print(f"Купив {self.car.brand}")
                 else:
                     print("Немає грошей на машину")
             case "3":
                 if self.money > 239:
-                    self.car = Auto("Toyota", 0, 240, 10)
+                    self.car = Auto("Toyota", 100, 240, 20)
                     print(f"Купив {self.car.brand}")
                 else:
                     print("Немає грошей на машину")
             case _:
-                print("Неправильний ввід")
+                print("Некоректне значення")
         human.simulate_day()
 
     def check_status(self):
@@ -205,7 +236,7 @@ class Human:
                         case "3":
                             human.simulate_day()
                         case _:
-                            print("Неправильний ввід")
+                            print("Некоректне значення")
                             human.simulate_day()
                 case "3":
                     self.eat()
@@ -219,7 +250,7 @@ class Human:
                     self.end_day()
                     print(f"{self.name}Заснув")
                 case _:
-                    print("Неправильний ввід")
+                    print("Некоректне значення")
                     human.simulate_day()
         else:
             self.end_day()
