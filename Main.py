@@ -63,6 +63,7 @@ class Human:
         if house.food > 0:
             self.satiety += random.randint(20, 40)
             max_eat_food = random.randint(1, 4)
+
             if max_eat_food > house.food:
                 house.food -= house.food
                 print(f"{self.name}поїв. Ситість: {self.satiety} Їжі вдома: {house.food}")
@@ -108,12 +109,12 @@ class Human:
                 else:
                     self.happiness += 20
                     print(f"{self.name}він переміг! Щастя: {self.happiness}")
-                self.stamina -= 20
             else:
                 self.happiness += 20
                 print(f"{self.name}відпочиває. Щастя: {self.happiness}")
         else:
             print(f"{self.name}сильно втомився для ігор. Стаміна: {self.stamina}")
+        self.stamina -= 20
         human.simulate_day()
 
     def clean_house(self):
@@ -163,15 +164,23 @@ class Human:
         else:
             if self.satiety < 10:
                 print(f"{self.name}зголоднів")
+                self.happiness -= random.randint(10, 20)
             elif self.job == "Нема":
                 print(f"{self.name}безробітний")
             elif self.current_day not in ["Субота", "Неділя"] and not self.work_today:
                 print(f"{self.name}потрібно сходити на роботу")
             elif self.current_day in ["Субота", "Неділя"]:
-                print("сьогодні вихідні можна відпочити")
+                print("Cьогодні вихідні можна відпочити")
             elif house.mess > 60:
                 self.happiness -= random.randint(5,10)
                 print("У будинку брудно. Може варто прибрати?")
+
+    def end_day(self):
+        if self.job != "Нема" and not self.work_today and self.current_day not in ["Субота", "Неділя"]:
+            Job.omissions += 1
+        if Job.omissions == 4 :
+            print(f"{self.name}загубив роботу")
+            self.job = "Нема"
 
     def simulate_day(self):
         if self.stamina > 0:
@@ -207,11 +216,13 @@ class Human:
                 case "6":
                     self.satiety -= 5
                     self.happiness += 5
+                    self.end_day()
                     print(f"{self.name}Заснув")
                 case _:
                     print("Неправильний ввід")
                     human.simulate_day()
         else:
+            self.end_day()
             print(f"{self.name}Устал")
 
 class House:
@@ -220,6 +231,7 @@ class House:
         self.food = 10
 
 class Job:
+    omissions = 0
     def __init__(self, position, salary, happiness_loss):
         self.position = position
         self.salary = salary
@@ -249,28 +261,22 @@ for day in range(1, 21):
     if human.alive:
         human.work_today = False
         human.stamina = 100
+
         print(f"\nДень: {day}")
         print(f"Сьогодні: {human.current_day}")
-
         print(f"\nГроші: {human.money}, Щастя {human.happiness}, Ситість: {human.satiety}, Забруднення у квартирі: {house.mess}\n")
 
         if human.job == "Нема":
             print("1. Шукати роботу")
-            print("2. Купити")
-            print("3. Їсти")
-            print("4. Прибрати в будинку")
-            print("5. Відпочивати")
-            print("6. Спать\n")
         else:
             print("1. Працювати")
-            print("2. Купити")
-            print("3. Їсти")
-            print("4. Прибрати в будинку")
-            print("5. Відпочивати")
-            print("6. Спать\n")
+        print("2. Купити")
+        print("3. Їсти")
+        print("4. Прибрати в будинку")
+        print("5. Відпочивати")
+        print("6. Спать\n")
 
         human.check_status()
-
         if human.current_day_index == 6:
             human.current_day_index = 0
             human.current_day = human.weekday[human.current_day_index]
