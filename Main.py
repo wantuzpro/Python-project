@@ -1,10 +1,12 @@
 import random
 import time
+from time import sleep
+
 
 class Human:
     def __init__(self, name):
         self.name = name
-        self.money = random.randint(10,50)
+        self.money = 100
         self.happiness = random.randint(10,100)
         self.satiety = random.randint(5,100)
         self.stamina = 100
@@ -85,6 +87,7 @@ class Human:
             self.money += self.job.salary
             self.happiness -= 10
             self.satiety -= 10
+            self.stamina -= 80
             self.work_today = True
             print(f"{self.name}працював і заробив {self.job.salary}. Баланс: {self.money}, Ситість: {self.satiety}, Щастя: {self.happiness}")
         else:
@@ -135,81 +138,99 @@ class Human:
                                     self.happiness += 10
                                     print(f"{self.name}не зловив рибу. Щастя: {self.happiness}, Паливо: {self.car.fuel}, Міцність машини: {self.car.fuel}")
                             case "2":
-                                print(f"\nГроші: {human.money}")
-                                self.bit = int(input("Скільки грошей поставити? "))
-
-                                if self.bit > self.money or self.money <= 0:
-                                    print("Не вистачає грошей")
-                                    print("Поставити машину? 1.Так, 2.Ні")
-                                    match input("Згодні? "):
-                                        case "1":
-                                            self.bit_car = True
-                                        case "2":
-                                            self.stamina = 0
-                                            self.happiness -= 10
-                                            print(f"{self.name}повернувся додому. Щастя: {self.happiness}, Паливо: {self.car.fuel}, Міцність машини: {self.car.fuel}")
-                                            human.simulate_day()
-                                else:
-                                    self.bit - self.money
-
-                                print("1.Пряма ставка, 2.Ставка на колір")
-                                match input("Що вибрати: "):
-                                    case "1":
-                                        bid_on = input("На яке число поставити? ")
-
-                                        numerical_roulette = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-                                                              18, 19, 20, 21,
-                                                              22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
-                                                              36, 37]
-                                        random_scroll = random.randint(10, 50)
-                                        subtraction = 0
-                                        for i in range(0, random_scroll):
-                                            if subtraction == len(numerical_roulette) - 1:
-                                                subtraction = 0
-                                            else:
-                                                subtraction += 1
-                                            print(f"\rЕлементи: {numerical_roulette[subtraction]}", end=" ")
-
-                                            time.sleep(0.1)
-                                        if bid_on == numerical_roulette[subtraction]:
-                                            self.money = self.bit * 8
-                                            print(f"\n {self.name}Переміг. Гроші: {human.money}")
-                                        else:
-                                            if self.bit_car:
-                                                self.car = "Нема"
-                                                self.happiness = 0
-                                                print(f"\n{self.name}Програв машину. Щастя: {self.happiness}")
-                                            else:
-                                                print(f"\n{self.name}Програв. Гроші: {human.money}")
-                                    case "2":
-                                        selected_color = "Не обраний"
-                                        print("1.Червоний, 2. Чорний")
-                                        match input("На який колір ставити?: "):
+                                while True:
+                                    print(f"\nГроші: {human.money}")
+                                    self.bit = 0
+                                    if self.bit > self.money or self.money <= 0:
+                                        print("Не вистачає грошей")
+                                        print("Поставити машину? 1.Так, 2.Ні")
+                                        match input("Згодні? "):
                                             case "1":
-                                                selected_color = "Червоний"
+                                                if self.car == "Нема":
+                                                    print("Немає машини")
+                                                    human.simulate_day()
+                                                else:
+                                                    self.bit_car = True
                                             case "2":
-                                                selected_color = "Чорний"
-                                        color_roulette = ["Червоний", "Чорний"]
-                                        random_scroll = random.randint(10, 50)
-                                        subtraction = 0
-                                        for i in range(0, random_scroll):
-                                            if subtraction == len(color_roulette) - 1:
-                                                subtraction = 0
-                                            else:
-                                                subtraction += 1
-                                            print(f"\rЕлементи: {color_roulette[subtraction]}", end=" ")
+                                                self.stamina = 0
+                                                self.happiness -= 10
+                                                self.bit = self.car.price
+                                                print(
+                                                    f"{self.name}повернувся додому. Щастя: {self.happiness}, Паливо: {self.car.fuel}, Міцність машини: {self.car.fuel}")
+                                                human.simulate_day()
+                                    else:
+                                        self.bit = int(input("Скільки грошей поставити? "))
+                                        self.bit -= self.money
 
-                                            time.sleep(0.1)
-                                        if selected_color == color_roulette[subtraction]:
-                                            self.money = self.bit * 2
-                                            print(f"\n{self.name}Переміг. Гроші: {human.money}")
-                                        else:
-                                            if self.bit_car:
-                                                self.car = "Нема"
-                                                self.happiness = 0
-                                                print(f"\n{self.name}Програв машину. Щастя: {self.happiness}")
+                                    print("1.Пряма ставка, 2.Ставка на колір 3.Закінчити грати")
+                                    match input("Що вибрати: "):
+                                        case "1":
+                                            bid_on = input("На яке число поставити? ")
+
+                                            numerical_roulette = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+                                                                  17,
+                                                                  18, 19, 20, 21,
+                                                                  22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+                                                                  35,
+                                                                  36, 37]
+                                            random_scroll = random.randint(10, 50)
+                                            subtraction = 0
+                                            for i in range(0, random_scroll):
+                                                if subtraction == len(numerical_roulette) - 1:
+                                                    subtraction = 0
+                                                else:
+                                                    subtraction += 1
+                                                print(f"\rЕлементи: {numerical_roulette[subtraction]}", end=" ")
+
+                                                time.sleep(0.1)
+                                            if bid_on == numerical_roulette[subtraction]:
+                                                self.money = self.bit * 8
+                                                print(f"\n {self.name}переміг. Гроші: {human.money}")
                                             else:
-                                                print(f"\n{self.name}Програв. Гроші: {human.money}")
+                                                if self.bit_car:
+                                                    self.car = "Нема"
+                                                    self.happiness = 0
+                                                    self.bit_car = False
+                                                    print(f"\n{self.name}програв машину. Щастя: {self.happiness}")
+                                                else:
+                                                    self.bit_car = False
+                                                    print(f"\n{self.name}програв. Гроші: {human.money}")
+                                        case "2":
+                                            selected_color = "Не обраний"
+                                            print("1.Червоний, 2. Чорний")
+                                            match input("На який колір ставити?: "):
+                                                case "1":
+                                                    selected_color = "Червоний"
+                                                case "2":
+                                                    selected_color = "Чорний"
+                                            color_roulette = ["Червоний", "Чорний"]
+                                            random_scroll = random.randint(10, 50)
+                                            subtraction = 0
+                                            for i in range(0, random_scroll):
+                                                if subtraction == len(color_roulette) - 1:
+                                                    subtraction = 0
+                                                else:
+                                                    subtraction += 1
+                                                print(f"\rЕлементи: {color_roulette[subtraction]}", end=" ")
+
+                                                time.sleep(0.1)
+                                            if selected_color == color_roulette[subtraction]:
+                                                self.money = self.bit * 2
+                                                print(f"\n{self.name}переміг. Гроші: {human.money}")
+                                            else:
+                                                if self.bit_car:
+                                                    self.car = "Нема"
+                                                    self.happiness = 0
+                                                    self.bit_car = False
+                                                    print(f"\n{self.name}програв машину. Щастя: {self.happiness}")
+                                                else:
+                                                    self.bit_car = False
+                                                    print(f"\n{self.name}програв. Гроші: {human.money}")
+                                        case "3":
+                                            self.money += self.bit
+                                            self.bit_car = False
+                                            print(f"\n{self.name}закінчив грати. Гроші: {human.money}")
+                                            break
                         self.stamina = 0
                     else:
                         if self.car == "Нема":
@@ -245,22 +266,22 @@ class Human:
         match input("Яку купити?: "):
             case "1":
                 if self.money >= 100:
-                    self.car = Auto("Nissan", 100, 100, 40)
-                    self.money -= 100
+                    self.car = Auto("Nissan", 100, 100, 40, 100)
+                    self.money -= self.car.price
                     print(f"Купив {self.car.brand}")
                 else:
                     print("Немає грошей на машину")
             case "2":
                 if self.money >= 120:
-                    self.car = Auto("BMW", 100, 100, 30)
-                    self.money -= 120
+                    self.car = Auto("BMW", 100, 100, 30, 120)
+                    self.money -= self.car.price
                     print(f"Купив {self.car.brand}")
                 else:
                     print("Немає грошей на машину")
             case "3":
                 if self.money >= 240:
-                    self.money -= 240
-                    self.car = Auto("Toyota", 100, 100, 20)
+                    self.car = Auto("Toyota", 100, 100, 20, 240)
+                    self.money -= self.car.price
                     print(f"Купив {self.car.brand}")
                 else:
                     print("Немає грошей на машину")
@@ -350,11 +371,12 @@ class Job:
         self.happiness_loss = happiness_loss
 
 class Auto:
-    def __init__(self, brand, fuel, durability, fuel_consumption):
+    def __init__(self, brand, fuel, durability, fuel_consumption, price):
         self.brand = brand
         self.fuel = fuel
         self.durability = durability
         self.fuel_consumption = fuel_consumption
+        self.price = price
 
 inp_name = input("Ведіть ім'я персонажа: ")
 human = Human(inp_name + " ")
@@ -369,7 +391,7 @@ print(f"Ситість: {human.satiety}")
 print(f"Забруднення у квартирі: {house.mess}")
 print(f"Їжі у квартирі: {house.food}")
 
-for day in range(1, 21):
+for day in range(1, 100):
     if human.alive:
         human.work_today = False
         human.stamina = 100
@@ -399,4 +421,5 @@ for day in range(1, 21):
             human.simulate_day()
     else:
         print(f"{human.name}загинув...")
+        sleep(10000)
         break
