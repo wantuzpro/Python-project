@@ -4,9 +4,9 @@ import time
 class Human:
     def __init__(self, name):
         self.name = name
-        self.money = 100
-        self.happiness = 50
-        self.satiety = 10
+        self.money = random.randint(10,50)
+        self.happiness = random.randint(10,100)
+        self.satiety = random.randint(5,100)
         self.stamina = 100
         self.alive = True
         self.work_today = False
@@ -168,7 +168,7 @@ class Human:
                                                 subtraction = 0
                                             else:
                                                 subtraction += 1
-                                            print(f"\rЭлементы: {numerical_roulette[subtraction]}", end=" ")
+                                            print(f"\rЕлементи: {numerical_roulette[subtraction]}", end=" ")
 
                                             time.sleep(0.1)
                                         if bid_on == numerical_roulette[subtraction]:
@@ -197,7 +197,7 @@ class Human:
                                                 subtraction = 0
                                             else:
                                                 subtraction += 1
-                                            print(f"\rЭлементы: {color_roulette[subtraction]}", end=" ")
+                                            print(f"\rЕлементи: {color_roulette[subtraction]}", end=" ")
 
                                             time.sleep(0.1)
                                         if selected_color == color_roulette[subtraction]:
@@ -340,7 +340,7 @@ class Human:
 class House:
     def __init__(self):
         self.mess = 0
-        self.food = 10
+        self.food = random.randint(1,5)
 
 class Job:
     omissions = 0
