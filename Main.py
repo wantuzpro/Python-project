@@ -17,7 +17,7 @@ class Human:
         self.car = "Нема"
         self.house = "Є"
 
-    def get_job(self, job="Нема"):
+    def get_job(self):
         if self.stamina >= 60:
             self.satiety -= 10
             self.work_today = True
@@ -252,7 +252,7 @@ class Human:
                     print("Немає грошей на машину")
             case "2":
                 if self.money >= 120:
-                    self.car = Auto("BMW", 100, 120, 30)
+                    self.car = Auto("BMW", 100, 100, 30)
                     self.money -= 120
                     print(f"Купив {self.car.brand}")
                 else:
@@ -260,7 +260,7 @@ class Human:
             case "3":
                 if self.money >= 240:
                     self.money -= 240
-                    self.car = Auto("Toyota", 100, 240, 20)
+                    self.car = Auto("Toyota", 100, 100, 20)
                     print(f"Купив {self.car.brand}")
                 else:
                     print("Немає грошей на машину")
@@ -271,7 +271,7 @@ class Human:
     def check_status(self):
         self.house.mess += random.randint(5, 10)
         print("Події дня:")
-        if self.happiness < 1:
+        if self.happiness <= 0:
             self.alive = False
         else:
             if self.satiety < 10:
