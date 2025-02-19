@@ -6,7 +6,7 @@ from time import sleep
 class Human:
     def __init__(self, name):
         self.name = name
-        self.money = 100
+        self.money = random.randint(5,30)
         self.happiness = random.randint(10,100)
         self.satiety = random.randint(5,100)
         self.stamina = 100
@@ -22,16 +22,17 @@ class Human:
     def get_job(self):
         if self.stamina >= 60:
             self.satiety -= 10
+            self.happiness -= 5
             self.work_today = True
             random_job = random.randint(1, 5)
             if random_job == 1:
                 random_job = random.randint(1, 3)
                 if random_job == 1:
-                    job = Job("Прибиральник", 20, 10)
+                    job = Job("Прибиральник", 20, 10, 80)
                 elif random_job == 2:
-                    job = Job("Офісний працівник", 30, 5)
+                    job = Job("Офісний працівник", 30, 5, 60)
                 elif random_job == 3:
-                    job = Job("Шеф", 50, 2)
+                    job = Job("Шеф", 50, 3, 40)
                 self.job = job
                 print(f"{self.name}отримав роботу: {job.position}")
             else:
@@ -84,10 +85,10 @@ class Human:
 
     def work(self):
         if self.stamina >= 60:
-            self.money += self.job.salary
-            self.happiness -= 10
             self.satiety -= 10
-            self.stamina -= 80
+            self.money += self.job.salary
+            self.happiness -= self.job.happiness_loss
+            self.stamina -= self.job.stamina_loss
             self.work_today = True
             print(f"{self.name}працював і заробив {self.job.salary}. Баланс: {self.money}, Ситість: {self.satiety}, Щастя: {self.happiness}")
         else:
@@ -287,6 +288,7 @@ class Human:
                     print("Немає грошей на машину")
             case _:
                 print("Некоректне значення")
+        self.happiness += 10
         human.simulate_day()
 
     def check_status(self):
@@ -300,12 +302,15 @@ class Human:
                 self.happiness -= random.randint(10, 20)
             elif self.job == "Нема":
                 print(f"{self.name}безробітний")
+                self.happiness -= 3
             elif self.current_day not in ["Субота", "Неділя"] and not self.work_today:
                 print(f"{self.name}потрібно сходити на роботу")
+                self.happiness -= 3
             elif self.current_day in ["Субота", "Неділя"]:
                 print("Cьогодні вихідні можна відпочити")
+                self.happiness += 5
             elif house.mess > 60:
-                self.happiness -= random.randint(5,10)
+                self.happiness -= 10
                 print("У будинку брудно. Може варто прибрати?")
 
     def end_day(self):
@@ -313,7 +318,10 @@ class Human:
             Job.omissions += 1
         if Job.omissions == 4 :
             print(f"{self.name}загубив роботу")
+            Job.omissions == 0
             self.job = "Нема"
+        if self.happiness <= 0:
+            self.alive = False
 
     def simulate_day(self):
         if self.stamina > 0:
@@ -365,10 +373,12 @@ class House:
 
 class Job:
     omissions = 0
-    def __init__(self, position, salary, happiness_loss):
+    def __init__(self, position, salary, happiness_loss, stamina_loss):
         self.position = position
         self.salary = salary
         self.happiness_loss = happiness_loss
+        self.stamina_loss = stamina_loss
+
 
 class Auto:
     def __init__(self, brand, fuel, durability, fuel_consumption, price):
@@ -420,6 +430,27 @@ for day in range(1, 100):
             human.current_day = human.weekday[human.current_day_index]
             human.simulate_day()
     else:
-        print(f"{human.name}загинув...")
+        print(f"\n{human.name}загинув...")
         sleep(10000)
         break
+
+print("\nСтатистика:\n")
+if human.alive:
+    print(f"{human.name}Вижив! {day} днів!")
+else:
+    print(f"{human.name}Протримався: {day}")
+print(f"Гроші: {human.money}")
+print(f"Щастя: {human.happiness}")
+print(f"Ситість: {human.satiety}")
+print(f"Забруднення у квартирі: {house.mess}")
+print(f"Їжі у квартирі: {house.food}")
+if human.job != "Нема":
+    print(f"Робота: {human.job.position}")
+else:
+    print(f"Робота: Нема")
+print(f"Кількість пропусків роботи: {Job.omissions}")
+if human.car != "Нема":
+    print(f"Машина: {human.car.brand}")
+else:
+    print(f"Машина: Нема")
+sleep(10000)
