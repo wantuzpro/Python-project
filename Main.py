@@ -2,7 +2,6 @@ import random
 import time
 from time import sleep
 
-
 class Human:
     def __init__(self, name):
         self.name = name
