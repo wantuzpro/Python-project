@@ -1,1 +1,1 @@
-# Python-project
+# Симулятор життя на python
